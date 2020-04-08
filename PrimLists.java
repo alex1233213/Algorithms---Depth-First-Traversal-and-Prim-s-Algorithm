@@ -1,4 +1,14 @@
 /*
+Algorithms assignment
+Implementation of part 1 and part 3 of the assignment.
+Part 1 - implement depth first search on a graph using 
+iterations and recursion.
+Part 3 - implement Prim's algorithm for finding the minimum 
+spanning tree for a weighted connected graph.
+
+When running the program , user is asked to enter the name 
+of the graph file to be used and the starting vertex.
+
 
 
 */
@@ -172,9 +182,7 @@ class Graph {
 
 
 
-    private int toInt(String s) {
-        return (int)(s - 64);
-    }
+    
 
     
     // method to display the graph representation
@@ -241,10 +249,14 @@ public class PrimLists {
 
         //create the graph
         Graph g = new Graph(fname);
-
+        
 
         System.out.println("Enter the start vetex of the graph");
-        s = Integer.parseInt(reader.readLine());
+        try {
+            s = Integer.parseInt(reader.readLine());
+        } catch (Exception e) {
+            throw e;
+        }
 
         System.out.println(s);
         g.display();
