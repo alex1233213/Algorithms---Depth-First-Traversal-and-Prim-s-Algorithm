@@ -15,6 +15,7 @@ C18342126
 */
 
 import java.io.*;
+import java.util.Stack; 
 
 
 
@@ -102,10 +103,10 @@ class Graph {
     private Node z;
     private int[] mst;
     
+    
     // used for traversing graph
     private int[] visited;
     private int id;
-    
     
     // default constructor
     public Graph(String graphFile)  throws IOException
@@ -288,37 +289,72 @@ class Graph {
             visited[v] = 0;
         }
 
-        df_iteration_visit(0, s);
+        df_iteration_visit(s);
     }
 
 
 
 
-    public void df_iteration_visit(int prev, int v) {
-        //node v has been visited
-        visited[v] = ++id;
-        System.out.println("Visited vertex " + toChar(v) + " along edge " + toChar(prev) + "-->" + toChar(v));
 
+    public void df_iteration_visit(int start) {
+        //create a stack which will keep track of the 
+        //vertexes being visited
+        Stack <Integer> s = new Stack <Integer>();
         
-        //mark the top of the stack
-        Node top = new Node();
-        top = z;
+        //used to access the adjacency list
+        Node n = new Node();
 
-        //create new node u, adjacent node to v
-        Node u = new Node();
-        u = adj[v];
-        top = u; //push onto stack
+        //push start vertex to the stack
+        s.push(start);
 
-        //check if node has adjacent nodes
-        while(top != z) {
-            if(u.next == z) {
-                //pop from the stack
-                top = top.next;
-            }
+        visited[start] = ++id;
+        System.out.println("Visited vertex " +
+                                         toChar(s.peek()) + 
+                                         " along edge " +
+                                          toChar(s.peek()) + "-->"
+                                           + toChar(s.peek()));
 
+        while(s.isEmpty() == false) {
+            int v = s.peek();
+            s.pop();
             
-        }
+            n = adj[v];
+                
+            int u = n.vert;
+
+            if(visited[u] == 0) {
+                s.push(u);
+
+                visited[u] = id++;
+                System.out.println("Visited vertex " +
+                                 toChar(u) + 
+                                " along edge " +
+                                toChar(v) + "-->"
+                                + toChar(u));
+            } else {
+                while(n != z) {
+                    if(visited[n.vert] == 0) {
+                        s.push(n.vert);
+
+                        visited[n.vert] = id++;
+                        System.out.println("Visited vertex " +
+                                    toChar(n.vert) + 
+                                    " along edge " +
+                                    toChar(v) + "-->"
+                                    + toChar(n.vert));
+                    } else {
+                        n = n.next;
+                    }
+                }
+            }
+            
+        }  
     }
+    
+    
+
+
+    
 }
 
 public class PrimLists {
