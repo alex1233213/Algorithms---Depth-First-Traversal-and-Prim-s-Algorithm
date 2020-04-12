@@ -318,37 +318,27 @@ class Graph {
             int v = s.peek();
             s.pop();
             
-            n = adj[v];
-                
-            int u = n.vert;
 
-            if(visited[u] == 0) {
-                s.push(u);
-
-                visited[u] = id++;
+            if(visited[v] == 0) {
+                s.push(v);
                 System.out.println("Visited vertex " +
-                                 toChar(u) + 
-                                " along edge " +
-                                toChar(v) + "-->"
-                                + toChar(u));
-            } else {
-                while(n != z) {
-                    if(visited[n.vert] == 0) {
-                        s.push(n.vert);
+                toChar(v) + 
+                " along edge " +
+                 toChar(v) + "-->"
+                  + toChar(v));
+            }  
 
-                        visited[n.vert] = id++;
-                        System.out.println("Visited vertex " +
-                                    toChar(n.vert) + 
-                                    " along edge " +
-                                    toChar(v) + "-->"
-                                    + toChar(n.vert));
-                    } else {
-                        n = n.next;
-                    }
-                }
-            }
+
             
-        }  
+            while (n != z)  
+            { 
+                int u = n.vert;
+                if(visited[u] == 0) {
+                    s.push(u);
+                }
+
+                n = n.next;
+            }
     }
     
     
@@ -358,7 +348,11 @@ class Graph {
 }
 
 public class PrimLists {
-    public static void main(String[] args) throws IOException
+    
+}
+
+
+public static void main(String[] args) throws IOException
     {
         int s;
         String fname;
