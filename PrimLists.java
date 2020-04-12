@@ -10,7 +10,8 @@ When running the program , user is asked to enter the name
 of the graph file to be used and the starting vertex.
 
 
-
+Alexandru Bulgari
+C18342126
 */
 
 import java.io.*;
@@ -124,6 +125,10 @@ class Graph {
         V = Integer.parseInt(parts[0]);
         E = Integer.parseInt(parts[1]);
         
+        //initialise the size of the array visited[] to the number of edges
+        //this array will be used to traverse the graph later on
+        visited = new int[E];
+
         // create sentinel node
         z = new Node(); 
         z.next = z;
@@ -146,7 +151,6 @@ class Graph {
             System.out.println("Edge " + toChar(u) + "--(" + wgt + ")--" + toChar(v));    
             
             //put edge into adjacency matrix     
-            
             //create new node for adjacent vertex v for vertex u 
             t = new Node();
 
@@ -232,6 +236,89 @@ class Graph {
     //         System.out.println("");
     // }
 
+
+
+
+    /*this method is used to initiate a call for the 
+    dfVisit method. It also marks all vertexes as unvisited
+    before calling the dfVisit method to search through the graph */
+    public void DF(int s) {
+        int id = 0;
+
+        //marka all nodes as unvisited
+        for(int v = 1; v < V; v++) {
+            visited[v] = 0;
+        }
+
+        dfVisit(0, s);
+    }
+
+
+
+    /*This method calls itself recursively as it 
+    searches through the nodes of the graph. The method
+    calls itself initially with the parameters prev and 
+    v. prev is the ancestor node and v is the current node
+    . It is then called recursively with v being the 
+    previous node and its adjacent node being the current node
+    The visited[] array ensures graph stops being traversed 
+    when all nodes have been visited */
+    public void dfVisit(int prev, int v) {
+        Node u = new Node();
+
+        visited[v] = ++id;
+        System.out.println("Visited vertex " + toChar(v) + " along edge " + toChar(prev) + "-->" + toChar(v));
+
+        for(u = adj[v]; u != z; u = u.next) {
+            if(visited[u.vert] == 0) {
+                dfVisit(v, u.vert);
+            }
+        }     
+    }
+
+
+
+
+    //this method initiates a call to  
+    public void DF_iteration(int s) {
+        int id = 0;
+
+        //mark all nodes as unvisited
+        for(int v = 1; v < V; v++) {
+            visited[v] = 0;
+        }
+
+        df_iteration_visit(0, s);
+    }
+
+
+
+
+    public void df_iteration_visit(int prev, int v) {
+        //node v has been visited
+        visited[v] = ++id;
+        System.out.println("Visited vertex " + toChar(v) + " along edge " + toChar(prev) + "-->" + toChar(v));
+
+        
+        //mark the top of the stack
+        Node top = new Node();
+        top = z;
+
+        //create new node u, adjacent node to v
+        Node u = new Node();
+        u = adj[v];
+        top = u; //push onto stack
+
+        //check if node has adjacent nodes
+        while(top != z) {
+            if(u.next == z) {
+                //pop from the stack
+                top = top.next;
+            }
+
+            
+        }
+    }
 }
 
 public class PrimLists {
@@ -261,8 +348,8 @@ public class PrimLists {
         System.out.println(s);
         g.display();
 
-       //g.DF(s);
-       //g.DF_iteration(s);
+    //    g.DF(s);
+       g.DF_iteration(s);
        //g.MST_Prim(s);                  
     }
 }
