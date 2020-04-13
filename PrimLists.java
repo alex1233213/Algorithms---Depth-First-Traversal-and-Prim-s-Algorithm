@@ -15,7 +15,7 @@ C18342126
 */
 
 import java.io.*;
-import java.util.Stack; 
+import java.util.Stack;     
 
 
 
@@ -176,8 +176,12 @@ class Graph {
             t.next = adj[v]; // point to the node at the start of the list
             adj[v] = t; // point to the new node, new node is now at the start
         }	   
-           
     }
+
+
+
+
+
    
     // convert vertex into char for pretty printing
     private char toChar(int u)
@@ -205,6 +209,8 @@ class Graph {
 
 
     
+
+
 	public void MST_Prim(int s)
 	{
         int v, u;
@@ -340,14 +346,6 @@ class Graph {
             }
         }
     }
-
-
-
-
-
-    // public void df_iteration_visit(int start) {
-        
-    // }  
 }
 
 public class PrimLists {
@@ -366,7 +364,7 @@ public class PrimLists {
         //create the graph
         Graph g = new Graph(fname);
         
-
+        //ask user for the starting vertex of the graph
         System.out.println("Enter the start vetex of the graph");
         try {
             s = Integer.parseInt(reader.readLine());
@@ -381,7 +379,7 @@ public class PrimLists {
         // g.DF(s);
 
         //DF_iteration performs depth first search using iteration
-        // g.DF_iteration(s);
+        g.DF_iteration(s);
 
 
        //g.MST_Prim(s);                  
