@@ -303,6 +303,7 @@ class Graph {
         //vertexes being visited
         Stack <Integer> s = new Stack <Integer>();
         
+        
         //used to access the adjacency list
         Node n = new Node();
 
@@ -311,8 +312,7 @@ class Graph {
 
         //mark start vertex visited
         visited[start] = ++id;
-        System.out.print("\n\nVisited vertexes in order " +
-                toChar(start) + "-->");
+        System.out.println("\nStarting edge " + toChar(start));
 
         /*Stack will continually have nodes added to it 
         which will be traversed untill all nodes have been traversed 
@@ -320,13 +320,20 @@ class Graph {
         while(s.isEmpty() == false) {
             //pop the top of the stack and store its value
             int v = s.peek();
+            Iterator itr = s.iterator();
+            int prev = (int) itr.next();
+
+            // if(itr.hasNext()) {
+                
+            // }
+            
             // s.pop();
 
             //check if node v has been visited
             if(visited[v] == 0) {
                 //mark as visited
                 visited[v] = ++id;
-                System.out.print(toChar(v) + "-->");
+                System.out.println("Visited vertex " + toChar(v) + " along edge " + toChar(prev) + "-->" + toChar(v));
             }  
 
             //node n points to adjacency list of 
