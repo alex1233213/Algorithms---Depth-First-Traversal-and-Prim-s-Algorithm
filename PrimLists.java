@@ -15,6 +15,8 @@ C18342126
 */
 
 import java.io.*;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;     
 
 
@@ -317,8 +319,9 @@ class Graph {
         leaving an empty stack*/
         while(s.isEmpty() == false) {
             //pop the top of the stack and store its value
-            int v = s.pop();
-            
+            int v = s.peek();
+            // s.pop();
+
             //check if node v has been visited
             if(visited[v] == 0) {
                 //mark as visited
@@ -329,20 +332,26 @@ class Graph {
             //node n points to adjacency list of 
             //current node being processed
             n = adj[v];
-            
 
             //push all adjacent nodes 
             //which are unvisited onto the stack
             while (n != z)  
             { 
                 //vertex of the node n
-                v = n.vert;
-                if(visited[v] == 0) {
+                int u = n.vert;
+                if(visited[u] == 0) {
                     //push vertex to process onto the stack 
-                    s.push(v);
+                    s.push(u);
+                    break;
+                } else {
+                    //iterate through the adjacency list
+                    n = n.next;
+
+                    if(n == z) {
+                        s.pop();
+                    }
                 }
-                //iterate through the adjacency list
-                n = n.next;
+                
             }
         }
     }
@@ -376,10 +385,15 @@ public class PrimLists {
         g.display();
 
         //DF performs depth first search using recursion
+        System.out.println("Depth first search using recursion");
         // g.DF(s);
 
         //DF_iteration performs depth first search using iteration
+        System.out.print("\n\n\nDepth first search using iteration");
+        
         g.DF_iteration(s);
+    
+            
 
 
        //g.MST_Prim(s);                  
