@@ -280,8 +280,10 @@ class Graph {
 
 
 
-    //this method initiates a call to  
-    public void DF_iteration(int s) {
+    /*This method uses a stack for depth first 
+    traversal of the graph. Takes the starting 
+    vertex as the parameter*/
+    public void DF_iteration(int start) {
         int id = 0;
 
         //mark all nodes as unvisited
@@ -289,14 +291,6 @@ class Graph {
             visited[v] = 0;
         }
 
-        df_iteration_visit(s);
-    }
-
-
-
-
-
-    public void df_iteration_visit(int start) {
         //create a stack which will keep track of the 
         //vertexes being visited
         Stack <Integer> s = new Stack <Integer>();
@@ -307,52 +301,57 @@ class Graph {
         //push start vertex to the stack
         s.push(start);
 
+        //mark start vertex visited
         visited[start] = ++id;
-        System.out.println("Visited vertex " +
-                                         toChar(s.peek()) + 
-                                         " along edge " +
-                                          toChar(s.peek()) + "-->"
-                                           + toChar(s.peek()));
+        System.out.print("\n\nVisited vertexes in order " +
+                toChar(start) + "-->");
 
+        /*Stack will continually have nodes added to it 
+        which will be traversed untill all nodes have been traversed 
+        leaving an empty stack*/
         while(s.isEmpty() == false) {
-            int v = s.peek();
-            s.pop();
+            //pop the top of the stack and store its value
+            int v = s.pop();
             
-
+            //check if node v has been visited
             if(visited[v] == 0) {
-                s.push(v);
-                System.out.println("Visited vertex " +
-                toChar(v) + 
-                " along edge " +
-                 toChar(v) + "-->"
-                  + toChar(v));
+                //mark as visited
+                visited[v] = ++id;
+                System.out.print(toChar(v) + "-->");
             }  
 
-
+            //node n points to adjacency list of 
+            //current node being processed
+            n = adj[v];
             
+
+            //push all adjacent nodes 
+            //which are unvisited onto the stack
             while (n != z)  
             { 
-                int u = n.vert;
-                if(visited[u] == 0) {
-                    s.push(u);
+                //vertex of the node n
+                v = n.vert;
+                if(visited[v] == 0) {
+                    //push vertex to process onto the stack 
+                    s.push(v);
                 }
-
+                //iterate through the adjacency list
                 n = n.next;
             }
+        }
     }
-    
-    
 
 
-    
+
+
+
+    // public void df_iteration_visit(int start) {
+        
+    // }  
 }
 
 public class PrimLists {
-    
-}
-
-
-public static void main(String[] args) throws IOException
+    public static void main(String[] args) throws IOException
     {
         int s;
         String fname;
@@ -375,11 +374,19 @@ public static void main(String[] args) throws IOException
             throw e;
         }
 
-        System.out.println(s);
+        //display the graph
         g.display();
 
-    //    g.DF(s);
-       g.DF_iteration(s);
+        //DF performs depth first search using recursion
+        // g.DF(s);
+
+        //DF_iteration performs depth first search using iteration
+        // g.DF_iteration(s);
+
+
        //g.MST_Prim(s);                  
     }
 }
+
+
+
