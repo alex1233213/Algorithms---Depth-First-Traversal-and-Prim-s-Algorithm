@@ -255,7 +255,7 @@ class Graph {
         int id = 0;
 
         //marka all nodes as unvisited
-        for(int v = 1; v < V; v++) {
+        for(int v = 1; v <= V; v++) {
             visited[v] = 0;
         }
 
@@ -282,9 +282,24 @@ class Graph {
             if(visited[u.vert] == 0) {
                 dfVisit(v, u.vert);
             }
-        }     
+        }
     }
 
+
+    
+    /*This method marks all nodes as unvisited before
+    initiating a call to DF_iteration to traverse the 
+    graph */
+    public void df_iteration_visit(int start) {
+        int id = 0;
+
+        //mark all nodes as unvisited
+        for(int v = 1; v <= V; v++) {
+            visited[v] = 0;
+        }
+
+        DF_iteration(start);
+    }
 
 
 
@@ -292,18 +307,13 @@ class Graph {
     traversal of the graph. Takes the starting 
     vertex as the parameter*/
     public void DF_iteration(int start) {
-        int id = 0;
-
-        //mark all nodes as unvisited
-        for(int v = 1; v < V; v++) {
-            visited[v] = 0;
-        }
+        
 
         //create a stack which will keep track of the 
         //vertexes being visited
         Stack <Integer> s = new Stack <Integer>();
-        
-        
+
+
         //used to access the adjacency list
         Node n = new Node();
 
@@ -312,7 +322,7 @@ class Graph {
 
         //mark start vertex visited
         visited[start] = ++id;
-        System.out.println("\nStarting edge " + toChar(start));
+        System.out.println("\nStarting vertex " + toChar(start));
 
         /*Stack will continually have nodes added to it 
         which will be traversed untill all nodes have been traversed 
@@ -320,20 +330,19 @@ class Graph {
         while(s.isEmpty() == false) {
             //pop the top of the stack and store its value
             int v = s.peek();
-            Iterator itr = s.iterator();
-            int prev = (int) itr.next();
 
-            // if(itr.hasNext()) {
-                
-            // }
-            
-            // s.pop();
+            /*v is the current vertex being processed on top of stack
+            prev is the next value in the stack from which v originates */
+            int prev = s.size() - 2;
+
 
             //check if node v has been visited
             if(visited[v] == 0) {
                 //mark as visited
                 visited[v] = ++id;
-                System.out.println("Visited vertex " + toChar(v) + " along edge " + toChar(prev) + "-->" + toChar(v));
+                System.out.println("Visited vertex " + toChar(v) + 
+                                    " along edge " + toChar(s.get(prev))
+                                     + "-->" + toChar(v));
             }  
 
             //node n points to adjacency list of 
@@ -346,6 +355,7 @@ class Graph {
             { 
                 //vertex of the node n
                 int u = n.vert;
+
                 if(visited[u] == 0) {
                     //push vertex to process onto the stack 
                     s.push(u);
@@ -374,14 +384,14 @@ public class PrimLists {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)); 
          
         // Asking user which graph file is to be opened
-        System.out.println("Enter the name of the graph file");
+        System.out.print("Enter the name of the graph file: ");
         fname = reader.readLine(); 
 
         //create the graph
         Graph g = new Graph(fname);
         
         //ask user for the starting vertex of the graph
-        System.out.println("Enter the start vetex of the graph");
+        System.out.print("Enter the start vetex of the graph: ");
         try {
             s = Integer.parseInt(reader.readLine());
         } catch (Exception e) {
@@ -392,13 +402,16 @@ public class PrimLists {
         g.display();
 
         //DF performs depth first search using recursion
+        System.out.println("\n-----------------------------------");
         System.out.println("Depth first search using recursion");
-        // g.DF(s);
+        System.out.println("-----------------------------------");
+        g.DF(s);
 
-        //DF_iteration performs depth first search using iteration
-        System.out.print("\n\n\nDepth first search using iteration");
-        
-        g.DF_iteration(s);
+        //df_iteration_visit() performs depth first search using iteration
+        System.out.println("\n\n\n-----------------------------------");
+        System.out.println("Depth first search using iteration");
+        System.out.println("-----------------------------------");
+        g.df_iteration_visit(s);
     
             
 
