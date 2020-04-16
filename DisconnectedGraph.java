@@ -1,3 +1,15 @@
+/*
+Implementation of part 2 of assignment -
+modification of DF to count the number of connected components in a disconnected graph.
+
+The program opens myDiscGraph.txt file to find its connected components
+
+Alexandru Bulgari
+C18342126
+*/
+
+
+
 import java.io.*;
 
 public class DisconnectedGraph {
@@ -123,7 +135,10 @@ public class DisconnectedGraph {
 
     /*this method is used to initiate a call for the 
     dfVisit method. It also marks all vertexes as unvisited
-    before calling the dfVisit method to search through the graph */
+    before calling the dfVisit method to search through the graph.
+    Also uses a for loop to call dfVisit for all unvisited 
+    vertices and increments connected_components each time function is called
+    */
     public void DF() {
         int id = 0;
 

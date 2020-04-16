@@ -15,8 +15,6 @@ C18342126
 */
 
 import java.io.*;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Stack;     
 
 
@@ -24,7 +22,7 @@ import java.util.Stack;
 class Heap
 {
     private int[] a;	   // heap array
-    private int[] hPos;	   // hPos[a[k]] == k
+    private int[] hPos;	   // keeps track of position of heap elements
     private int[] dist;    // dist[v] = priority of v
 
     private int N;         // heap size
@@ -42,44 +40,101 @@ class Heap
     }
 
 
+
+
+    //returns true if heap is empty
     public boolean isEmpty() 
     {
         return N == 0;
     }
 
 
+
+
+    //finds vertex position on the graph after added to heap 
+    //in a upward direction, based on distance priority,
+    //i.e shortest distance on top of heap. 
+    //Based on pseudocode from notes
     public void siftUp( int k) 
     {
-        int v = a[k];
+        int u = a[k];
+        
+        //a[0] is not used as a node for heap
+        a[0] = 0;
+        
 
-        // code yourself
-        // must use hPos[] and dist[] arrays
+        //distance of node is smaller than its parents
+        while(dist[u] < dist[a[k / 2]]) {
+            //child node assigned parent node 
+            a[k] = a[k / 2];
+
+            //position of node on heap stored
+            hPos[a[k]] = k;
+            k = k / 2;
+            
+        }
+
+        a[k] = u;
+
+        //record position of vertex
+        hPos[a[k]] = k;
     }
 
 
-    public void siftDown( int k) 
+
+
+    /*after the top of the heap is removed, it 
+    is replaced by the last node on heap, which is 
+    then moved downwards according to the distance 
+    priority. Based on pseudocode from notes
+    */
+    public void siftDown( int k)
     {
         int v, j;
        
+        //a[1]
         v = a[k];  
         
-        // code yourself 
-        // must use hPos[] and dist[] arrays
+        //while heap has a left child
+        while(k <= N / 2) {
+            //left child
+            j = 2 * k;
+
+            if(j < N && dist[a[j]] > dist[a[j + 1]]) {
+                j++;
+            }
+
+            //distance smaller than its child exits the loop
+            //as no need to change position of nodes
+            if(dist[v] <= dist[a[j]]) {
+                break;
+            }
+
+            //top node becomes child node
+            a[k] = a[j];
+            k = j;
+        }
+        
+
+        a[k] = v;
+        //store positon of node a[k]
+        hPos[a[k]] = k;
     }
 
-
+    //insert node into heap
     public void insert( int x) 
     {
         a[++N] = x;
         siftUp( N);
     }
 
-
+    //remove node from heap
     public int remove() 
     {   
         int v = a[1];
         hPos[v] = 0; // v is no longer in heap
-                
+        
+        //last node on heap becomes first
         a[1] = a[N--];
         siftDown(1);
         
@@ -119,7 +174,7 @@ class Graph {
 
         FileReader fr = new FileReader(graphFile);
 		BufferedReader reader = new BufferedReader(fr);
-	           
+        
         String splits = " +";  // multiple whitespace as delimiter
 		String line = reader.readLine();        
         String[] parts = line.split(splits);
@@ -177,7 +232,10 @@ class Graph {
             //put node to start of the list
             t.next = adj[v]; // point to the node at the start of the list
             adj[v] = t; // point to the new node, new node is now at the start
-        }	   
+        }
+        
+        //close the reader
+        reader.close();
     }
 
 
@@ -212,38 +270,92 @@ class Graph {
 
     
 
-
+    /*This method finds the minimum spanning 
+    tree of the input graph , with starting vertex, s. 
+    Based on pseudocode from notes*/
 	public void MST_Prim(int s)
 	{
         int v, u;
         int wgt, wgt_sum = 0;
         int[]  dist, parent, hPos;
-        Node t;
+        Node t = new Node();
 
-        //code here
+        // initialise arrays
+        dist = new int[V + 1];
+        parent = new int[V + 1];
+        hPos = new int[V + 1];
+    
+
+        //mark distance of all vertexes as infinity
+        for(v = 1; v <= V; ++v) {
+            //mark distance to all nodes infinity
+            dist[v] = Integer.MAX_VALUE;
+
+            //all nodes have no parents
+            parent[v] = 0;
+            hPos[v] = 0;//v not in heap
+        }
+
+
         
-        // dist[s] = 0;
+        dist[s] = 0;
         
-        // Heap h =  new Heap(V, dist, hPos);
-        // h.insert(s);
+        Heap h =  new Heap(V, dist, hPos);
+        h.insert(s);
         
-        // while ( ...)  
-        // {
-        //     // most of alg here
+        while(h.isEmpty() == false)  {
+            v = h.remove();//remove from top of heap, store its value 
             
-        // }
+            //calculate the sum of the weights
+            wgt_sum += dist[v];
+            
+            dist[v] = -dist[v];// v now in mst
+
+
+            //for all vertices adjacent to v
+            for(t = adj[v]; t != z; t = t.next) {
+                //u = adjacent vertex
+                //wgt = weight of the adjacent vertex from v - u
+                u = t.vert;
+                wgt = t.wgt;
+
+                //check if weight is smaller than current weight
+                if(wgt < dist[u]) {
+                    dist[u] = t.wgt;
+                    parent[u] = v;
+
+                    //check if vertex is in heap
+                    if(hPos[u] == 0) {
+                        h.insert(u);
+                    } else  {
+                        //if its already in the heap
+                        //position its priority according 
+                        //to distance from vertex v
+                        h.siftUp(hPos[u]);
+                    }
+                }
+            }
+        }
+
+
+
         System.out.print("\n\nWeight of MST = " + wgt_sum + "\n");
         
-        // mst = parent;                      		
+        //parent stores vertices in mst
+        mst = parent;                      		
 	}
     
-    // public void showMST()
-    // {
-    //         System.out.print("\n\nMinimum Spanning tree parent array is:\n");
-    //         for(int v = 1; v <= V; ++v)
-    //             System.out.println(toChar(v) + " -> " + toChar(mst[v]));
-    //         System.out.println("");
-    // }
+
+
+
+    //display mst
+    public void showMST()
+    {
+        System.out.print("Minimum Spanning tree parent array is:\n");
+        for(int v = 1; v <= V; ++v)
+            System.out.println(toChar(v) + " -> " + toChar(mst[v]));
+            System.out.println("");
+    }
 
 
 
@@ -254,7 +366,7 @@ class Graph {
     public void DF(int s) {
         int id = 0;
 
-        //marka all nodes as unvisited
+        //mark all nodes as unvisited
         for(int v = 1; v <= V; v++) {
             visited[v] = 0;
         }
@@ -328,7 +440,7 @@ class Graph {
         which will be traversed untill all nodes have been traversed 
         leaving an empty stack*/
         while(s.isEmpty() == false) {
-            //pop the top of the stack and store its value
+            //value stored on top of stack
             int v = s.peek();
 
             /*v is the current vertex being processed on top of stack
@@ -349,8 +461,8 @@ class Graph {
             //current node being processed
             n = adj[v];
 
-            //push all adjacent nodes 
-            //which are unvisited onto the stack
+            //push adjacent node of v  
+            //which is unvisited onto the stack
             while (n != z)  
             { 
                 //vertex of the node n
@@ -364,11 +476,12 @@ class Graph {
                     //iterate through the adjacency list
                     n = n.next;
 
+                    //if no adjacent unvisited nodes found, pop 
+                    //vertex from the stack
                     if(n == z) {
                         s.pop();
                     }
                 }
-                
             }
         }
     }
@@ -415,8 +528,11 @@ public class PrimLists {
     
             
 
+        //Minimum spanning tree
+        g.MST_Prim(s);  
 
-       //g.MST_Prim(s);                  
+        //display MST
+        g.showMST();                
     }
 }
 
