@@ -388,7 +388,9 @@ class Graph {
         Node u = new Node();
 
         visited[v] = ++id;
-        System.out.println("Visited vertex " + toChar(v) + " along edge " + toChar(prev) + "-->" + toChar(v));
+        System.out.println("Visited vertex " + toChar(v) +
+                             " along edge " + toChar(prev) +
+                              "-->" + toChar(v));
 
         for(u = adj[v]; u != z; u = u.next) {
             if(visited[u.vert] == 0) {
